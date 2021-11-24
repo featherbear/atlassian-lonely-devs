@@ -36,6 +36,22 @@
 
 <p class="title is-1 is-spaced">Lonely Devs @ Atlassian</p>
 
+<div class="notification is-info">
+  <p>
+    Are you interning at Atlassian over the 2021/2022 Summer break in Sydney?
+  </p>
+  <p>
+    This tool helps you find where other interns have booked desk locations in
+    the office!
+  </p>
+  <br />
+  <p><b>Privacy</b>: You will only be able to see other interns who have registered on Lonely Devs</p>
+  <br />
+  <p>
+    <a href="https://github.com/featherbear/atlassian-lonely-devs">GitHub for the curious and security conscious</a>
+  </p>
+</div>
+
 <p class="mb-2">Enter your <code>@atlassian.com</code> email to sign in</p>
 
 <form on:submit={doRequest}>
@@ -57,7 +73,7 @@
     <p class="control">
       <button
         disabled={isSuccess || !email?.toLowerCase().endsWith("@atlassian.com")}
-        class="button is-success"
+        class="button is-info"
         on:click={doRequest}
         class:is-loading={isSubmitting}>Continue</button
       >
