@@ -11,6 +11,6 @@ export async function get (req, res, next) {
   const email = payload.sub as string
   Store.add(email)
 
-  res.cookie(cookieName, encode({ user: email }, { expiresIn: '6m' }))
+  res.cookie(cookieName, encode({ user: email }, { expiresIn: '90 days' }))
   return res.redirect("../../")
 }
