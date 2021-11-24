@@ -10,7 +10,7 @@ import type { ScheduledEmployeesResults } from './gql/ScheduledEmployeesResults'
 import type ScheduleEntry from '../types/ScheduleEntry'
 
 function fetch(url, ...args) {
-  logger.info('Requesting ' + url)
+  logger.debug('Requesting ' + url)
   return _fetch(url, ...args)
 }
 
@@ -74,6 +74,8 @@ const Envoy = {
 
     if (!access_token) access_token = await Envoy.auth()
     if (!access_token) throw new Error('Could not authenticate to Envoy')
+
+    logger.info("Fetching schedule for " + dateQuery)
 
     let responses: ScheduledEmployeesResults[] = []
 

@@ -10,7 +10,9 @@ if (!APP_SECRET?.trim()) throw new Error('APP_SECRET not defined')
 export function decode (token) {
   try {
     return jwt.verify(token, APP_SECRET)
-  } catch {
+  } catch (e) {
+    logger.debug("Failed to decode JWT " + token)
+    console.log(e);
     return null
   }
 }
