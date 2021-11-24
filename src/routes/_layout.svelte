@@ -4,7 +4,8 @@
 	export let segment: string;
 </script>
 
-<style>
+<style global lang="scss">
+	@import 'bulma/bulma.sass';
 	main {
 		position: relative;
 		max-width: 56em;

@@ -5,6 +5,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import url from '@rollup/plugin-url';
 import svelte from 'rollup-plugin-svelte';
 import babel from '@rollup/plugin-babel';
+import json from '@rollup/plugin-json'
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
@@ -48,6 +49,7 @@ export default {
 				browser: true,
 				dedupe: ['svelte']
 			}),
+			json(),
 			commonjs(),
 			typescript({ sourceMap: dev }),
 
@@ -105,6 +107,7 @@ export default {
 			resolve({
 				dedupe: ['svelte']
 			}),
+			json(),
 			commonjs(),
 			typescript({ sourceMap: dev })
 		],
@@ -125,6 +128,7 @@ export default {
 					'process.env.NODE_ENV': JSON.stringify(mode)
 				},
 			}),
+			json(),
 			commonjs(),
 			typescript({ sourceMap: dev }),
 			!dev && terser()
