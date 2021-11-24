@@ -38,12 +38,7 @@ export default function generate(rootObj: typeof Root) {
                                 asOf: {
                                     id: 2,
                                     type: 'uint64'
-                                },
-                                date: {
-                                    id: 3,
-                                    type: 'string'
                                 }
-
                             }
                         }
                     }
@@ -61,5 +56,4 @@ export default function generate(rootObj: typeof Root) {
 export interface ScheduleEntryBatch {
     items: ScheduleEntry[]
     asOf: number
-    date: string
 }

@@ -19,6 +19,9 @@ import dayjs from 'dayjs'
 const API_BASE_URL = 'https://app.envoy.com'
 
 const Envoy = {
+  /** 
+   * @deprecated 
+   */
   async suite() {
     let resp = await fetch(
       API_BASE_URL +
@@ -26,7 +29,6 @@ const Envoy = {
         ENVOY_EMAIL
       )}`
     ).then(r => r.json())
-    console.log(resp)
 
     Envoy.auth()
   },
@@ -63,7 +65,7 @@ const Envoy = {
     }
   },
 
-  async fetchScheduling({ access_token, date, writeback }: { access_token?: string, date?: string | Date, writeback?: WritebackInterface } = {}) {
+  async fetchScheduling({ access_token, date }: { access_token?: string, date?: string | Date } = {}) {
     let dateQuery: string;
 
     if (!date || typeof date !== 'string') {
@@ -101,7 +103,6 @@ const Envoy = {
           })
         }
       ).then(r => r.json())
-      if (writeback) writeback.date = resp.data.scheduledEmployees.scheduledEmployees[0].date
       responses.push(resp)
     } while (
       responses[responses.length - 1].data.scheduledEmployees.pagination
@@ -124,7 +125,3 @@ const Envoy = {
 }
 
 export default Envoy
-
-export interface WritebackInterface {
-  date?: string
-}

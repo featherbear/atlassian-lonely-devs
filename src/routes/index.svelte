@@ -70,9 +70,11 @@
 
   let dateSelect;
   $: if (dateSelect) {
-	  result = null
+    result = null;
     doUpdate();
   }
+
+  import { fade } from "svelte/transition";
 </script>
 
 <svelte:head>
@@ -147,13 +149,13 @@
 {#if result}
   {#if result.asOf}
     <div class="notification mb-1">
-      Data somewhat accurate as of {dayjs(result.asOf).from($Clock)}
+      Data somewhat accurate as of {dayjs(result.asOf).subtract(2, 'seconds').from($Clock)}
     </div>
   {/if}
 
   <div class="ld-floor-container">
     {#each Object.entries(byFloor) as [floor, entries]}
-      <div class="ld-floor">
+      <div class="ld-floor" transition:fade>
         <section class="hero is-small is-info">
           <p><b>{floor}</b></p>
         </section>
@@ -167,9 +169,6 @@
   </div>
 {:else}
   <progress class="progress is-small is-info" max="100" />
-  <progress class="progress is-info" max="100" />
-  <progress class="progress is-medium is-info" max="100" />
-  <progress class="progress is-large is-info" max="100" />
 {/if}
 
 <style lang="scss">

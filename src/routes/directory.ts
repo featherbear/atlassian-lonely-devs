@@ -2,61 +2,73 @@ import dayjs from "dayjs";
 import { cookieName } from "../components/constants";
 import { decode } from "../components/JWT";
 import Store from "../components/Store";
-import Envoy, { WritebackInterface } from "../envoy/authCycle";
+import Envoy from "../envoy/authCycle";
 import type ScheduleEntry from "../types/ScheduleEntry";
 import ProtobufGen, { ScheduleEntryBatch } from "../types/ScheduleEntry.protobuf";
 
 const { ScheduleEntryBatchProtobuf } = ProtobufGen(require('protobufjs/light').Root)
 
-let cache: ScheduleEntry[] = null;
-let cachedFor: string;
 let authToken: string = null;
-let lastUpdate: Date = new Date(0);
-let promise: Promise<typeof cache>;
+let authTokenDate = new Date(0)
 
-function doUpdate(date, writeback?: WritebackInterface) {
-    return (promise = Envoy.fetchScheduling({ access_token: authToken, date, writeback }).then((d) => {
-        lastUpdate = new Date();
-        cache = d;
-        
-        if (date) cachedFor = date
-        else if (writeback?.date) cachedFor = writeback.date
+let cache: {
+    [date: string]: {
+        promise: Promise<ScheduleEntry[]>,
+        data: ScheduleEntry[],
+        last: Date
+    }
+} = {};
 
-        promise = null;
+function doUpdate(date: string) {
+    let promise = Envoy.fetchScheduling({ access_token: authToken, date }).then((d) => {
+        cache[date] = {
+            promise: null,
+            data: d,
+            last: new Date()
+        }
         logger.info(`Retrieved ${d.length} schedule records`);
         return d;
-    }));
+    })
+
+    cache[date] = { ...cache[date], promise }
+    return promise;
 }
 
 export async function get(req, res, next) {
-    if (decode(req.cookies[cookieName])) {
+    let session = decode(req.cookies[cookieName])
+    if (!session) {
         res.status(401)
         return res.end()
     }
+
     let { date } = req.query
 
     date = dayjs(date)
     if (isNaN(date)) date = dayjs()
     date = date.format("YYYY-MM-DD")
 
-    const delta = new Date().getTime() - lastUpdate.getTime();
-    let writeback: WritebackInterface = {}
+    const delta = new Date().getTime() - ((cache[date]?.last?.getTime() ?? 0));
 
     if (delta > 60 * 1000) {
-        if (!authToken || delta > 82800 /* 23 hours */) {
-            promise = Envoy.auth().then(async (token) => {
-                authToken = token;
-                if (!authToken) return null;
-                return doUpdate(date, writeback);
-            });
+        if (!authToken || (new Date().getTime() - authTokenDate.getTime() > 82800 /* 23 hours */)) {
+            cache[date] = {
+                ...cache[date],
+                promise:
+                    Envoy.auth().then(async (token) => {
+                        authToken = token;
+                        authTokenDate = new Date()
+                        if (!authToken) return null;
+                        return doUpdate(date);
+                    })
+            }
         }
     }
 
-    let data = cache || await promise || await doUpdate(date, writeback);
+    logger.info(`Received schedule data for ${date} from ${session['user']}`)
+    let data = cache[date]?.data || await cache[date]?.promise || await doUpdate(date);
 
     return res.end(ScheduleEntryBatchProtobuf.encode({
-        asOf: lastUpdate.getTime(),
-        date: writeback?.date,
+        asOf: cache[date]?.last?.getTime(),
         items: data
         // .filter(({ email }) => Store.check(email))
     } as ScheduleEntryBatch).finish());
