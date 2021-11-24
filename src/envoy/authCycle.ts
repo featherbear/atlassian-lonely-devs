@@ -23,14 +23,19 @@ const Envoy = {
    * @deprecated 
    */
   async suite() {
-    let resp = await fetch(
+    let lookupResp = await fetch(
       API_BASE_URL +
       `/a/visitors/api/v2/users/lookup?email=${encodeURIComponent(
         ENVOY_EMAIL
       )}`
     ).then(r => r.json())
+    console.log('Lookup', lookupResp);
 
-    Envoy.auth()
+    let authToken = await Envoy.auth()
+    if (authToken) console.log("Got auth token!")
+
+    let resp = await Envoy.fetchScheduling()
+    console.log(`Fetch returned ${resp.length} entries`);
   },
 
   async auth() {
