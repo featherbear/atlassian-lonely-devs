@@ -70,6 +70,6 @@ export async function get(req, res, next) {
     return res.end(ScheduleEntryBatchProtobuf.encode({
         asOf: cache[date]?.last?.getTime(),
         items: data
-            .filter(({ email }) => Store.check(email))
+            .filter(({ email }) => process.env.NODE_ENV === 'development' || Store.check(email))
     } as ScheduleEntryBatch).finish());
 }
