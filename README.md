@@ -4,4 +4,5 @@ Some web app that makes a request to the Envoy GraphQL API to figure out desk bo
 
 🤷‍♂️🤷‍♂️🤷‍♂️
 
-Docker: Data is written to '/app/dist/server/data/users.json`
+* Server listens on port 3000
+* Docker: Data is written to '/app/dist/server/data/users.json`
