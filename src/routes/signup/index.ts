@@ -6,14 +6,26 @@ const {
   MAIL_PORT,
   MAIL_USERNAME,
   MAIL_PASSWORD,
-  MAIL_TLS
+  MAIL_TLS,
+  APP_URL
 } = process.env
 
-import Mailer from 'nodemailer/lib/mailer'
+import type Mailer from 'nodemailer/lib/mailer'
+import type { Request, Response } from 'express'
+
 import nodemailer from 'nodemailer'
-import { Request, Response } from 'express'
-import Envoy from '../../envoy/authCycle'
 import { encode } from '../../components/JWT'
+
+import Mailgen from 'mailgen'
+
+let mailgen = new Mailgen({
+  theme: 'salted', product: {
+    name: "Lonely Devs",
+    link: APP_URL
+  }
+})
+
+import Envoy from '../../envoy/authCycle'
 
 let mailer: Mailer = nodemailer.createTransport(
   {
@@ -27,7 +39,7 @@ let mailer: Mailer = nodemailer.createTransport(
   } as any /** brrr types **/
 )
 
-export async function get (req: Request, res: Response, next) {
+export async function post(req: Request, res: Response, next) {
   const { email }: { email: string } = req.body
 
   // 'Validate' the email
@@ -35,14 +47,29 @@ export async function get (req: Request, res: Response, next) {
     return res.FAIL('Invalid email, or something')
   }
 
-  mailer.sendMail({
+  const token = encode({
+    sub: email
+  })
+
+  await mailer.sendMail({
     to: email,
-    subject: 'LonelyDevs | Authenticate',
-    text:
-      'lol click here no virus i promise: ' +
-      encode({
-        sub: email
-      })
+    from: "Lonely Devs",
+    subject: 'Lonely Devs @ Atlassian | Authenticate',
+    html: mailgen.generate({
+      body: {
+        name: "friend",
+        outro: "This link will expire in 5 minutes",
+        intro: "You've requested to join the Sydney interns desk scheduling directory",
+        action: {
+          instructions: "Click the button below to continue sign up / sign in",
+          button: {
+            color: '#33b5e5',
+            text: "Confirm account",
+            link: `${process.env.APP_URL}/signup/callback?code=${token}`
+          }
+        }
+      }
+    })
   })
 
   return res.OK('Yay')

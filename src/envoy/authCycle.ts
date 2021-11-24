@@ -7,28 +7,31 @@ import _fetch from 'node-fetch'
 
 import ScheduledEmployeesQuery from './gql/ScheduledEmployees'
 import type { ScheduledEmployeesResults } from './gql/ScheduledEmployeesResults'
+import type ScheduleEntry from '../types/ScheduleEntry'
 
-function fetch (url, ...args) {
+function fetch(url, ...args) {
   logger.info('Requesting ' + url)
   return _fetch(url, ...args)
 }
 
+import dayjs from 'dayjs'
+
 const API_BASE_URL = 'https://app.envoy.com'
 
 const Envoy = {
-  async suite () {
+  async suite() {
     let resp = await fetch(
       API_BASE_URL +
-        `/a/visitors/api/v2/users/lookup?email=${encodeURIComponent(
-          ENVOY_EMAIL
-        )}`
+      `/a/visitors/api/v2/users/lookup?email=${encodeURIComponent(
+        ENVOY_EMAIL
+      )}`
     ).then(r => r.json())
     console.log(resp)
 
     Envoy.auth()
   },
 
-  async auth () {
+  async auth() {
     let resp = await fetch(API_BASE_URL + `/a/auth/v0/token`, {
       method: 'POST',
       body: new URLSearchParams({
@@ -60,7 +63,15 @@ const Envoy = {
     }
   },
 
-  async fetchScheduling (access_token?: string) {
+  async fetchScheduling({ access_token, date, writeback }: { access_token?: string, date?: string | Date, writeback?: WritebackInterface } = {}) {
+    let dateQuery: string;
+
+    if (!date || typeof date !== 'string') {
+      dateQuery = dayjs(date).format('YYYY-MM-DD')
+    } else {
+      dateQuery = date
+    }
+
     if (!access_token) access_token = await Envoy.auth()
     if (!access_token) throw new Error('Could not authenticate to Envoy')
 
@@ -79,8 +90,8 @@ const Envoy = {
             query: ScheduledEmployeesQuery,
             variables: {
               locationID: '98589',
-              date: '2021-11-25',
-              query: '',
+              date: dateQuery,
+              query: '', // hm?
               page: responses.length + 1,
               size: 100,
               scheduled: true
@@ -88,6 +99,7 @@ const Envoy = {
           })
         }
       ).then(r => r.json())
+      if (writeback) writeback.date = resp.data.scheduledEmployees.scheduledEmployees[0].date
       responses.push(resp)
     } while (
       responses[responses.length - 1].data.scheduledEmployees.pagination
@@ -104,9 +116,13 @@ const Envoy = {
         email,
         location: desk?.name,
         floor: desk?.floor?.name
-      })
+      }) as ScheduleEntry
     )
   }
 }
 
 export default Envoy
+
+export interface WritebackInterface {
+  date?: string
+}

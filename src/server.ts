@@ -13,10 +13,10 @@ import * as winston from 'winston'
 import { decode } from './components/JWT'
 import { cookieName } from './components/constants'
 global.logger = winston.createLogger({
-    level: 'debug',
-    transports: [new winston.transports.Console()]
-  })
-  
+  level: 'debug',
+  transports: [new winston.transports.Console()]
+})
+
 
 dotenv.config()
 
@@ -42,7 +42,7 @@ express()
     })
   )
   .listen(PORT, () => {
-    
+    logger.info("Server started")
   })
 
 declare global {

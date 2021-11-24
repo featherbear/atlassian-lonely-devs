@@ -11,6 +11,8 @@ declare global {
       ENVOY_PASSWORD: string
 
       APP_SECRET: string
+
+      APP_URL: string
     }
   }
 }
