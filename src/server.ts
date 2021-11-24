@@ -13,7 +13,7 @@ import * as winston from 'winston'
 import { decode } from './components/JWT'
 import { cookieName } from './components/constants'
 global.logger = winston.createLogger({
-  level: 'debug',
+  level: process.env.LOG_LEVEL ?? 'info',
   transports: [new winston.transports.Console()]
 })
 

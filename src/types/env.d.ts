@@ -13,6 +13,8 @@ declare global {
       APP_SECRET: string
 
       APP_URL: string
+
+      LOG_LEVEL: 'debug' | 'info'
     }
   }
 }

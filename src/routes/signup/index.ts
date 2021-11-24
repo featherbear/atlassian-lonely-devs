@@ -25,8 +25,6 @@ let mailgen = new Mailgen({
   }
 })
 
-import Envoy from '../../envoy/authCycle'
-
 let mailer: Mailer = nodemailer.createTransport(
   {
     host: MAIL_HOST,
