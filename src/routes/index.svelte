@@ -34,7 +34,7 @@
         ) as unknown as ScheduleEntryBatch;
         isDebug && console.debug("Received", result)
       } finally {
-        setTimeout(doUpdate, 15 * 1000);
+        timeout = setTimeout(doUpdate, 15 * 1000);
       }
     };
 
