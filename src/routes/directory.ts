@@ -64,7 +64,7 @@ export async function get(req, res, next) {
         }
     }
 
-    logger.info(`Received schedule data for ${date} from ${session['user']}`)
+    logger.info(`Received schedule request for ${date} from ${session['user']}`)
     let data = cache[date]?.data || await cache[date]?.promise || await doUpdate(date);
 
     return res.end(ScheduleEntryBatchProtobuf.encode({
