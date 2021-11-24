@@ -77,7 +77,7 @@
     }
   }
 
-  let dateSelect;
+  let dateSelect = dayjs();
   $: if (dateSelect) {
     result = null;
     doUpdate();
