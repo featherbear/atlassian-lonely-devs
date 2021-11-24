@@ -8,11 +8,12 @@ const { APP_SECRET } = process.env
 if (!APP_SECRET?.trim()) throw new Error('APP_SECRET not defined')
 
 export function decode (token) {
+  if (!token) return null
   try {
     return jwt.verify(token, APP_SECRET)
   } catch (e) {
     logger.debug("Failed to decode JWT " + token)
-    console.log(e);
+    // console.log(e);
     return null
   }
 }

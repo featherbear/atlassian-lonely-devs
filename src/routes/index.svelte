@@ -20,7 +20,13 @@
       try {
         const payload = await fetch(
           "/directory?date=" + dateSelect.format("YYYY-MM-DD")
-        ).then((r) => r.arrayBuffer());
+        ).then((r) => {
+          if (r.status == 401) {
+            location.href = "signup";
+          } else {
+            return r.arrayBuffer();
+          }
+        });
         result = ScheduleEntryBatchProtobuf.decode(
           new Uint8Array(payload)
         ) as unknown as ScheduleEntryBatch;
@@ -149,7 +155,9 @@
 {#if result}
   {#if result.asOf}
     <div class="notification mb-1">
-      Data somewhat accurate as of {dayjs(result.asOf).subtract(2, 'seconds').from($Clock)}
+      Data somewhat accurate as of {dayjs(result.asOf)
+        .subtract(2, "seconds")
+        .from($Clock)}
     </div>
   {/if}
 
