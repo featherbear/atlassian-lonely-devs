@@ -31,7 +31,7 @@
           new Uint8Array(payload)
         ) as unknown as ScheduleEntryBatch;
       } finally {
-        setTimeout(doUpdate, 60 * 1000);
+        setTimeout(doUpdate, 15 * 1000);
       }
     };
 
