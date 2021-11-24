@@ -2,9 +2,11 @@
   import generate, {
     ScheduleEntryBatch,
   } from "../types/ScheduleEntry.protobuf";
-  import { onMount } from "svelte";
+  import { getContext, onMount } from "svelte";
   import type ScheduleEntry from "../types/ScheduleEntry";
   import Clock from "../components/Clock";
+
+  const isDebug = !!getContext('debug')
 
   let doUpdate: () => void;
 
@@ -30,6 +32,7 @@
         result = ScheduleEntryBatchProtobuf.decode(
           new Uint8Array(payload)
         ) as unknown as ScheduleEntryBatch;
+        isDebug && console.debug("Received", result)
       } finally {
         setTimeout(doUpdate, 15 * 1000);
       }
