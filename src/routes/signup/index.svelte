@@ -101,8 +101,9 @@
       An email has been sent to <b>{email}</b> (yo check your spam mail it's probably
       there).
     </p>
+    <br/>
     <p>Please click the link in the email to continue.</p>
-    <p>Link expires in 5 minutes</p>
+    <p>Link expires in 10 minutes</p>
   </div>
 {/if}
 

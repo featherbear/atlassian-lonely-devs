@@ -19,5 +19,5 @@ export function decode (token) {
 }
 
 export function encode (payload, { ...opts } = {}) {
-  return jwt.sign(payload, APP_SECRET, { expiresIn: '5m', ...opts })
+  return jwt.sign(payload, APP_SECRET, { expiresIn: '10m', ...opts })
 }
