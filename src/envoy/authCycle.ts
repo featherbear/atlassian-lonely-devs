@@ -6,7 +6,7 @@ const { ENVOY_EMAIL, ENVOY_PASSWORD } = process.env
 import _fetch from 'node-fetch'
 
 import ScheduledEmployeesQuery from './gql/ScheduledEmployees'
-import type { ScheduledEmployeesResults } from './types/ScheduledEmployeesResults'
+import type { ScheduledEmployeesResults } from './gql/ScheduledEmployeesResults'
 
 function fetch (url, ...args) {
   logger.info('Requesting ' + url)
