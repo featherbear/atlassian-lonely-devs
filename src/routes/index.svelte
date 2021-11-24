@@ -80,7 +80,7 @@
   let dateSelect = dayjs();
   $: if (dateSelect) {
     result = null;
-    doUpdate();
+    doUpdate?.();
   }
 
   import { fade } from "svelte/transition";
