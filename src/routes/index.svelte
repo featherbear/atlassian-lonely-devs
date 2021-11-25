@@ -198,9 +198,9 @@
     margin: 0 0 0.5em 0;
   }
 
-  h2 {
-    font-size: 1.4em;
-  }
+  // h2 {
+  //   font-size: 1.4em;
+  // }
 
   p {
     margin: 1em auto;
