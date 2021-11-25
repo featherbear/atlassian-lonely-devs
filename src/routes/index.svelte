@@ -77,13 +77,13 @@
     }
   }
 
-  let dateSelect = dayjs();
+  let dateSelect;
+
   $: if (dateSelect) {
     result = null;
-    doUpdate?.();
+    doUpdate();
   }
 
-  import { fade } from "svelte/transition";
 </script>
 
 <svelte:head>
@@ -166,7 +166,7 @@
 
   <div class="ld-floor-container">
     {#each Object.entries(byFloor) as [floor, entries]}
-      <div class="ld-floor" transition:fade>
+      <div class="ld-floor">
         <section class="hero is-small is-info">
           <p><b>{floor}</b></p>
         </section>
