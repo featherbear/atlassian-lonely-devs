@@ -56,8 +56,9 @@ export async function get(req, res, next) {
                 promise:
                     Envoy.auth().then(async (token) => {
                         authToken = token;
-                        authTokenDate = new Date()
                         if (!authToken) return null;
+
+                        authTokenDate = new Date()
                         return doUpdate(date);
                     })
             }
