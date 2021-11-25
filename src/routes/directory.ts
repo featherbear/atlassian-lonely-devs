@@ -50,7 +50,7 @@ export async function get(req, res, next) {
     const delta = new Date().getTime() - ((cache[date]?.last?.getTime() ?? 0));
 
     if (delta > 45 * 1000) {
-        if (!authToken || (new Date().getTime() - authTokenDate.getTime() > 82800 /* 23 hours */)) {
+        if (!authToken || (new Date().getTime() - authTokenDate.getTime() > 82800 * 1000 /* 23 hours */)) {
             cache[date] = {
                 ...cache[date],
                 promise:
@@ -61,6 +61,8 @@ export async function get(req, res, next) {
                         return doUpdate(date);
                     })
             }
+        } else {
+            doUpdate(date)
         }
     }
 
