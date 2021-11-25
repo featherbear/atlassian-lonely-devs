@@ -5,11 +5,11 @@
   import { getContext, onMount } from "svelte";
   import type ScheduleEntry from "../types/ScheduleEntry";
   import Clock from "../components/Clock";
-
-  const isDebug = !!getContext('debug')
+  const isDebug = !!getContext("debug");
 
   let doUpdate: () => void;
 
+  let refreshCountdown: RefreshCountdown;
   let result: ScheduleEntryBatch;
 
   onMount(() => {
@@ -32,9 +32,11 @@
         result = ScheduleEntryBatchProtobuf.decode(
           new Uint8Array(payload)
         ) as unknown as ScheduleEntryBatch;
-        isDebug && console.debug("Received", result)
+        isDebug && console.debug("Received", result);
       } finally {
-        timeout = setTimeout(doUpdate, 15 * 1000);
+        const wait = 15;
+        timeout = setTimeout(doUpdate, wait * 1000);
+        refreshCountdown?.start(wait);
       }
     };
 
@@ -64,8 +66,9 @@
   import dayjs_relativeTime from "dayjs/plugin/relativeTime";
   dayjs.extend(dayjs_relativeTime);
 
-  let sortType: SortType = "name";
+  import RefreshCountdown from "../components/RefreshCountdown.svelte";
 
+  let sortType: SortType = "name";
   type SortType = "name" | "desk";
 
   function sorted(order: SortType, items: ScheduleEntry[]) {
@@ -83,7 +86,6 @@
     result = null;
     doUpdate();
   }
-
 </script>
 
 <svelte:head>
@@ -160,6 +162,7 @@
       Data somewhat accurate as of {dayjs(result.asOf)
         .subtract(2, "seconds")
         .from($Clock)}
+      <RefreshCountdown bind:this={refreshCountdown} startOnLoad={15} />
     </div>
   {/if}
 
