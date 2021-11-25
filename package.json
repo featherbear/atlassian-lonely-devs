@@ -1,7 +1,7 @@
 {
   "name": "lonely-devs",
   "description": "I'm just an intern. 2021/2022 Sydney Intern Meetup",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "scripts": {
     "dev": "sapper dev",
     "build": "sapper build dist --legacy",

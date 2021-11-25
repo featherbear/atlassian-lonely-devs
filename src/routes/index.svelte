@@ -136,7 +136,6 @@
       </div>
       <div class="control">
         <button class="button" on:click={() => (dateSelect = dayjs())}>
-          <span class="icon is-small" />
           <span> {dateSelect?.format("DD/MM/YYYY")}</span>
         </button>
       </div>
