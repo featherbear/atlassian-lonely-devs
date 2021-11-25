@@ -176,6 +176,8 @@
           </div>
         {/each}
       </div>
+    {:else}
+      Looks like no one's in today 👀
     {/each}
   </div>
 {:else}
