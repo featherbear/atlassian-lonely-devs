@@ -49,10 +49,12 @@ export async function post(req: Request, res: Response, next) {
     sub: email
   })
 
+  let link = `${process.env.APP_URL}/signup/callback?code=${token}`
   await mailer.sendMail({
     to: email,
     from: "Lonely Devs",
     subject: 'Lonely Devs @ Atlassian | Authenticate',
+    text: "Hi, you, click, thanks: " + link,
     html: mailgen.generate({
       body: {
         name: "friend",
@@ -63,7 +65,7 @@ export async function post(req: Request, res: Response, next) {
           button: {
             color: '#33b5e5',
             text: "Confirm account",
-            link: `${process.env.APP_URL}/signup/callback?code=${token}`
+            link
           }
         }
       }
