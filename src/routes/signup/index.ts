@@ -58,17 +58,17 @@ export async function post(req: Request, res: Response, next) {
     html: mailgen.generate({
       body: {
         name: "friend",
-        outro: "This link will expire in 5 minutes",
-        intro: "You've requested to join the Sydney interns desk scheduling directory",
+        outro: "If you are unable to click the link, please navigate to the following address: " + link,
+        intro: "You've requested to join the Sydney 2021/2022 interns desk directory",
         action: {
-          instructions: "Click the button below to continue sign up / sign in",
+          instructions: "Click the button below to continue. Link will expire in 10 minutes",
           button: {
             color: '#33b5e5',
             text: "Confirm account",
             link
           }
-        }
-      }
+        },
+      }, 
     })
   })
 
